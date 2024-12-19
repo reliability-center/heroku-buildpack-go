@@ -11,7 +11,7 @@ cache=$(cd "$2/" && pwd)
 env_dir="${3}"
 buildpack=$(cd "$(dirname $0)/.." && pwd)
 
-build_subdir=$(cat "$env_dir/GO_BUILD_SUBDIR")
+build_subdir="$(cat "$env_dir/GO_BUILD_SUBDIR")"
 if [ -n "$build_subdir" ]; then
     build="${build}/${build_subdir}"
 fi
@@ -28,7 +28,7 @@ if test -f "${build}/go.mod" || #go modules
    test -f "${build}/glide.yaml" || # glide
    (test -d "${build}/src" && test -n "$(find "${build}/src" -mindepth 2 -type f -name '*.go' | sed 1q)") # gb
 then
-  : # all is well
+    : # all is well
 else
     err ""
     err "Go app not detected."
@@ -558,6 +558,7 @@ case "${TOOL}" in
 
         if [[ -f bin/go-post-compile ]]; then
             step "Running bin/go-post-compile hook"
+            export BUILD_DIR="${build}"
             chmod a+x bin/go-post-compile
             bin/go-post-compile
         fi
