@@ -11,9 +11,11 @@ cache=$(cd "$2/" && pwd)
 env_dir="${3}"
 buildpack=$(cd "$(dirname $0)/.." && pwd)
 
-build_subdir="$(cat "$env_dir/GO_BUILD_SUBDIR")"
-if [ -n "$build_subdir" ]; then
-    build="${build}/${build_subdir}"
+if [ -f "$env_dir/GO_BUILD_SUBDIR" ]; then
+    build_subdir="$(cat "$env_dir/GO_BUILD_SUBDIR")"
+    if [ -n "$build_subdir" ]; then
+        build="${build}/${build_subdir}"
+    fi
 fi
 
 source "${buildpack}/lib/common.sh"
